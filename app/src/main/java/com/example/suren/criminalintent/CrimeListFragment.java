@@ -6,6 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -54,9 +57,13 @@ public class CrimeListFragment extends Fragment {
             mSelectedPosition = mPosition;
             startActivity(CrimeActivity.newIntent(getContext(), mCrime.getId()));
             */
-            mSelectedPosition = mPosition;
-            startActivity(CrimePagerActivity.newIntent(getContext(), mPosition));
+            startCrimeDetailsActivity(mPosition);
         }
+    }
+
+    private void startCrimeDetailsActivity(int position) {
+        mSelectedPosition = position;
+        startActivity(CrimePagerActivity.newIntent(getContext(), position));
     }
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
@@ -90,6 +97,7 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -120,5 +128,23 @@ public class CrimeListFragment extends Fragment {
             mSelectedPosition = -1;
         }
         */
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_item_new_crime) {
+            Crime crime = new Crime();
+            int position = CrimeLab.getInstance(getContext()).addCrime(crime);
+            startCrimeDetailsActivity(position);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_crime_list, menu);
     }
 }

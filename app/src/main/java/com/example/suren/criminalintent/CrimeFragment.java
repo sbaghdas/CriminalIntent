@@ -98,8 +98,7 @@ public class CrimeFragment extends Fragment {
         if (requestCode == requestCode) {
             mCrime.setDate((Date)data.getSerializableExtra(DatePickerFragment.RESULT_DATE));
             updateDate();
-        }
-        else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }

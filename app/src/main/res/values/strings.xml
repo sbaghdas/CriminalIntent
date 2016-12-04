@@ -9,4 +9,5 @@
     <string name="crime_title_label">TITLE</string>
     <string name="date_dialog_title">Crime date:</string>
     <string name="date_dialog_ok_label">OK</string>
+    <string name="new_crime">New Crime</string>
 </resources>
