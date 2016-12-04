@@ -7,4 +7,6 @@
     <string name="crime_details_label">DETAILS</string>
     <string name="crime_solved_label">Solved</string>
     <string name="crime_title_label">TITLE</string>
+    <string name="date_dialog_title">Crime date:</string>
+    <string name="date_dialog_ok_label">OK</string>
 </resources>

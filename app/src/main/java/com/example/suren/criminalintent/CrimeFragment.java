@@ -1,7 +1,6 @@
 package com.example.suren.criminalintent;
 
-import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -14,12 +13,14 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
-import com.example.suren.criminalintent.R;
-
+import java.util.Date;
 import java.util.UUID;
+
+import static com.example.suren.criminalintent.DatePickerFragment.RESULT_DATE;
 
 public class CrimeFragment extends Fragment {
     private static final String ARG_CRIME_ID = "crime_id";
+    public static final int REQUEST_DATE = 0;
 
     private Crime mCrime;
     private EditText mTitleField;
@@ -72,8 +73,15 @@ public class CrimeFragment extends Fragment {
         }
         );
         mDateButton = (Button)v.findViewById(R.id.crime_date);
-        mDateButton.setText(mCrime.getDate().toString());
-        mDateButton.setEnabled(false);
+        updateDate();
+        mDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerFragment dateDialog = DatePickerFragment.newInstance(mCrime.getDate());
+                dateDialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
+                dateDialog.show(getFragmentManager(), DatePickerFragment.DLG_TAG);
+            }
+        });
         mSolved = (CheckBox)v.findViewById(R.id.crime_solved);
         mSolved.setChecked(mCrime.isSolved());
         mSolved.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -83,5 +91,20 @@ public class CrimeFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == requestCode) {
+            mCrime.setDate((Date)data.getSerializableExtra(DatePickerFragment.RESULT_DATE));
+            updateDate();
+        }
+        else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void updateDate() {
+        mDateButton.setText(mCrime.getDate().toString());
     }
 }
