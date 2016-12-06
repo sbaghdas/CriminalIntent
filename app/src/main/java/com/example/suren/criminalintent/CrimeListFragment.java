@@ -3,6 +3,7 @@ package com.example.suren.criminalintent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,9 +19,11 @@ import android.widget.Toast;
 import java.util.List;
 
 public class CrimeListFragment extends Fragment {
+    private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mCrimeAdapter;
     private int mSelectedPosition = -1;
+    private boolean mSubtitleVisible = false;
 
     private class CrimeHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
@@ -48,15 +51,6 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            /*
-            Toast toast = Toast.makeText(view.getContext(), "Crime " +
-                    mCrime.getTitle() + " is clicked!", Toast.LENGTH_SHORT);
-            toast.show();
-            */
-            /*
-            mSelectedPosition = mPosition;
-            startActivity(CrimeActivity.newIntent(getContext(), mCrime.getId()));
-            */
             startCrimeDetailsActivity(mPosition);
         }
     }
@@ -98,6 +92,8 @@ public class CrimeListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mSubtitleVisible = (savedInstanceState != null) &&
+                savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE, false);
     }
 
     @Override
@@ -122,29 +118,61 @@ public class CrimeListFragment extends Fragment {
         if (mSelectedPosition != -1) {
             mCrimeAdapter.notifyDataSetChanged();
         }
-        /*
-        if (mSelectedPosition != -1) {
-            mCrimeAdapter.notifyItemChanged(mSelectedPosition);
-            mSelectedPosition = -1;
-        }
-        */
+        updateSubtitle();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_item_new_crime) {
-            Crime crime = new Crime();
-            int position = CrimeLab.getInstance(getContext()).addCrime(crime);
-            startCrimeDetailsActivity(position);
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case (R.id.menu_item_new_crime):
+                Crime crime = new Crime();
+                int position = CrimeLab.getInstance(getContext()).addCrime(crime);
+                startCrimeDetailsActivity(position);
+                return true;
+            case (R.id.menu_item_show_subtitle):
+                mSubtitleVisible = !mSubtitleVisible;
+                getActivity().invalidateOptionsMenu();
+                updateSubtitle();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void updateSubtitle() {
+        int crimeCount = CrimeLab.getInstance(getContext()).getCrimes().size();
+        String subtitle;
+        if (mSubtitleVisible) {
+            if (crimeCount > 0) {
+                subtitle = getResources().getQuantityString(R.plurals.subtitle_plural,
+                        crimeCount, crimeCount);
+            } else {
+                subtitle = getString(R.string.no_crimes);
+            }
+        }
+        else {
+            subtitle = null;
+        }
+        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        activity.getSupportActionBar().setSubtitle(subtitle);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_crime_list, menu);
+        MenuItem subtitleMenu = menu.findItem(R.id.menu_item_show_subtitle);
+        if (mSubtitleVisible) {
+            subtitleMenu.setTitle(R.string.hide_subtitle);
+        }
+        else {
+            subtitleMenu.setTitle(R.string.show_subtitle);
+        }
     }
 }

@@ -10,4 +10,11 @@
     <string name="date_dialog_title">Crime date:</string>
     <string name="date_dialog_ok_label">OK</string>
     <string name="new_crime">New Crime</string>
+    <string name="show_subtitle">Show Subtitle</string>
+    <string name="hide_subtitle">Hide Subtitle</string>
+    <string name="no_crimes">No crimes</string>
+    <plurals name="subtitle_plural">
+        <item quantity="one">%d crime</item>
+        <item quantity="other">%d crimes</item>
+    </plurals>
 </resources>
