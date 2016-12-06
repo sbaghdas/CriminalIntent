@@ -118,6 +118,12 @@ public class CrimeListFragment extends Fragment {
         if (mSelectedPosition != -1) {
             mCrimeAdapter.notifyDataSetChanged();
         }
+        View emptyListTextView = getView().findViewById(R.id.empty_list_text_view);
+        if (CrimeLab.getInstance(getContext()).getCrimes().size() == 0) {
+            emptyListTextView.setVisibility(View.VISIBLE);
+        } else {
+            emptyListTextView.setVisibility(View.INVISIBLE);
+        }
         updateSubtitle();
     }
 
