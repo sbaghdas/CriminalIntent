@@ -123,7 +123,7 @@ public class CrimeListFragment extends Fragment {
         if (CrimeLab.getInstance(getContext()).getCrimes().size() == 0) {
             emptyListTextView.setVisibility(View.VISIBLE);
         } else {
-            emptyListTextView.setVisibility(View.INVISIBLE);
+            emptyListTextView.setVisibility(View.GONE);
         }
         updateSubtitle();
     }
