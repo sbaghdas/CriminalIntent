@@ -42,4 +42,8 @@ public class CrimeLab {
         mCrimes.add(crime);
         return mCrimes.size() - 1;
     }
+
+    public boolean deleteCrime(Crime crime) {
+        return mCrimes.remove(crime);
+    }
 }

@@ -2,13 +2,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <TextView
         android:text="@string/no_crimes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/empty_list_text_view"/>
+        android:id="@+id/empty_list_text_view"
+        android:padding="16dp"
+        android:gravity="center"
+        android:textSize="24sp"
+        />
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
