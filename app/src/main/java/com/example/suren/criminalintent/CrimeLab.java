@@ -25,7 +25,9 @@ public class CrimeLab {
 
 
     private CrimeLab(Context context) {
-        mContext = context;
+        // save application context because by storing activity context in
+        // a static object will lead to that activity never being destroyed
+        mContext = context.getApplicationContext();
         mDbHelper = new CrimeBaseHelper(context);
         mDb = mDbHelper.getWritableDatabase();
     }
