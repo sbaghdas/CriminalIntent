@@ -18,6 +18,11 @@ public class Crime {
         mDate = new Date();
     }
 
+    public Crime(String uuid) {
+        this.mId = UUID.fromString(uuid);
+        mDate = new Date();
+    }
+
     public Crime setTitle(String title) {
         mTitle = title;
         return this;

@@ -98,6 +98,12 @@ public class CrimeFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        CrimeLab.getInstance(getContext()).updateCrime(mCrime);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == requestCode) {
             mCrime.setDate((Date)data.getSerializableExtra(DatePickerFragment.RESULT_DATE));
