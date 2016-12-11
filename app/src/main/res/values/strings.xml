@@ -26,4 +26,5 @@
     <string name="crime_report_unsolved">Crime is not solved</string>
     <string name="crime_report_suspect">%s is the suspect</string>
     <string name="crime_report_nosuspect">the suspect is unknown</string>
+    <string name="crime_report_chooser_title">Sent crime report via</string>
 </resources>

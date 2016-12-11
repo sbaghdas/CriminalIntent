@@ -116,6 +116,17 @@ public class CrimeFragment extends Fragment {
         updateSuspectButtonTitle();
 
         mSendReportButton = (Button)v.findViewById(R.id.send_crime_report);
+        mSendReportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
+                i.putExtra(Intent.EXTRA_SUBJECT, mCrime.getTitle());
+                i = Intent.createChooser(i, getString(R.string.crime_report_chooser_title));
+                startActivity(i);
+            }
+        });
         mCallSuspectButton = (Button)v.findViewById(R.id.call_suspect);
 
         return v;
