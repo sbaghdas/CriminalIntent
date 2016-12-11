@@ -31,6 +31,7 @@ public class CrimeBaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         if (oldVersion != newVersion) {
             sqLiteDatabase.execSQL("drop table " + CrimeDbSchema.CrimeTable.NAME);
+            onCreate(sqLiteDatabase);
         }
     }
 }

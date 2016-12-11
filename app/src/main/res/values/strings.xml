@@ -21,4 +21,9 @@
     <string name="choose_suspect_label">CHOOSE SUSPECT</string>
     <string name="send_crime_report_label">SEND CRIME REPORT</string>
     <string name="call_suspect_label">CALL SUSPECT</string>
+    <string name="crime_report">%1$s! Crime discovered on %2$s. %3$s and %4$s.</string>
+    <string name="crime_report_solved">Crime is solved</string>
+    <string name="crime_report_unsolved">Crime is not solved</string>
+    <string name="crime_report_suspect">%s is the suspect</string>
+    <string name="crime_report_nosuspect">the suspect is unknown</string>
 </resources>
