@@ -117,7 +117,7 @@ public class CrimeFragment extends Fragment {
         mChooseSuspectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i= new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 startActivityForResult(i, PICK_REQUEST);
             }
         });
@@ -174,6 +174,13 @@ public class CrimeFragment extends Fragment {
         });
 
         updateButtons();
+
+        PackageManager packageManager = getActivity().getPackageManager();
+        // if we can't handle Intent.ACTION_PICK then disable mChooseSuspectButton
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        if (pickIntent.resolveActivity(packageManager) == null) {
+            mChooseSuspectButton.setEnabled(false);
+        }
 
         return v;
     }
