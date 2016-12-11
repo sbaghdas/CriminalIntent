@@ -45,6 +45,7 @@ public class CrimeLab {
         res.put(CrimeDbSchema.Column.TITLE, crime.getTitle());
         res.put(CrimeDbSchema.Column.DATE, crime.getDate().getTime());
         res.put(CrimeDbSchema.Column.SOLVED, crime.isSolved() ? 1 : 0);
+        res.put(CrimeDbSchema.Column.SUSPECT, crime.getSuspect());
         return res;
     }
 
@@ -52,7 +53,8 @@ public class CrimeLab {
         return new Crime(cursor.getString(cursor.getColumnIndex(CrimeDbSchema.Column.UUID))).
                 setTitle(cursor.getString(cursor.getColumnIndex(CrimeDbSchema.Column.TITLE))).
                 setDate(new Date(cursor.getInt(cursor.getColumnIndex(CrimeDbSchema.Column.DATE)))).
-                setSolved(cursor.getInt(cursor.getColumnIndex(CrimeDbSchema.Column.SOLVED)) != 0);
+                setSolved(cursor.getInt(cursor.getColumnIndex(CrimeDbSchema.Column.SOLVED)) != 0).
+                setSuspect(cursor.getString(cursor.getColumnIndex(CrimeDbSchema.Column.SUSPECT)));
     }
 
     public List<Crime> getCrimes() {

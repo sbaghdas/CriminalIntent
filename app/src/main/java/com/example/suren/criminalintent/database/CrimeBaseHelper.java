@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class CrimeBaseHelper extends SQLiteOpenHelper {
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
     private static final String DATABASE_NAME = "crimes.db";
 
     public CrimeBaseHelper(Context context) {
@@ -23,7 +23,8 @@ public class CrimeBaseHelper extends SQLiteOpenHelper {
                 CrimeDbSchema.Column.UUID + " text, " +
                 CrimeDbSchema.Column.TITLE + " text, " +
                 CrimeDbSchema.Column.DATE + " integer, " +
-                CrimeDbSchema.Column.SOLVED + " integer)");
+                CrimeDbSchema.Column.SOLVED + " integer, " +
+                CrimeDbSchema.Column.SUSPECT + " text)");
     }
 
     @Override
