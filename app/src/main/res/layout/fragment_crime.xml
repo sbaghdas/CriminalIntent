@@ -39,4 +39,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/crime_solved" />
+
+    <Button
+        android:text="@string/choose_suspect_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/choose_suspect"/>
+
+    <Button
+        android:text="@string/send_crime_report_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/send_crime_report"/>
+
+    <Button
+        android:text="@string/call_suspect_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/call_suspect"/>
 </LinearLayout>
