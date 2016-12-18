@@ -1,7 +1,6 @@
 package com.example.suren.criminalintent;
 
 import android.Manifest;
-import android.content.ContentProvider;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -30,8 +29,6 @@ import android.widget.ImageView;
 import java.io.File;
 import java.util.Date;
 import java.util.UUID;
-
-import static com.example.suren.criminalintent.DatePickerFragment.RESULT_DATE;
 
 public class CrimeFragment extends Fragment {
     private static final String ARG_CRIME_ID = "crime_id";
@@ -211,7 +208,12 @@ public class CrimeFragment extends Fragment {
     }
 
     private void updatePhotoView() {
-        // TODO: have to implement
+        if (mPhotoFile != null && mPhotoFile.exists()) {
+            mPhotoView.setImageBitmap(PictureUtils.getScaledBitmap(
+                    mPhotoFile.getPath(), getActivity()));
+        } else {
+            mPhotoView.setImageBitmap(null);
+        }
     }
 
     @Override
