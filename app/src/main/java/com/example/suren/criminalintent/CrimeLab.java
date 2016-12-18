@@ -4,10 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 
 import com.example.suren.criminalintent.database.CrimeBaseHelper;
 import com.example.suren.criminalintent.database.CrimeDbSchema;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -101,5 +103,13 @@ public class CrimeLab {
                 CrimeDbSchema.Column.UUID + " = ?",
                 new String[] { crime.getId().toString() } );
         return (rowsDeleted > 0);
+    }
+
+    public File getPhotoFile(Crime crime) {
+        File dir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (dir == null) {
+            return null;
+        }
+        return new File(dir, crime.getPhotoFileName());
     }
 }

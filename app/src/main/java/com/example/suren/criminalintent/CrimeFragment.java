@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -26,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
@@ -35,6 +37,7 @@ public class CrimeFragment extends Fragment {
     private static final String ARG_CRIME_ID = "crime_id";
     public static final int REQUEST_DATE = 0;
     public static final int PICK_REQUEST = 1;
+    public static final int REQUEST_PHOTO = 2;
 
     private Crime mCrime;
     private EditText mTitleField;
@@ -45,6 +48,7 @@ public class CrimeFragment extends Fragment {
     private Button mCallSuspectButton;
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
+    private File mPhotoFile;
 
     public CrimeFragment() {
     }
@@ -65,6 +69,7 @@ public class CrimeFragment extends Fragment {
         UUID id = (UUID)getArguments().getSerializable(ARG_CRIME_ID);
         if (id != null) {
             mCrime = crimeLab.getCrime(id);
+            mPhotoFile = crimeLab.getPhotoFile(mCrime);
         }
         // get access to contacts
         if (ActivityCompat.checkSelfPermission(getContext(),
@@ -188,7 +193,25 @@ public class CrimeFragment extends Fragment {
 
         mPhotoButton = (ImageButton)v.findViewById(R.id.camera_button);
         mPhotoView = (ImageView)v.findViewById(R.id.crime_photo);
+
+        Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        mPhotoButton.setEnabled(mPhotoFile != null &&
+                captureImage.resolveActivity(packageManager) != null);
+        mPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                Uri uri = Uri.fromFile(mPhotoFile);
+                captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), REQUEST_PHOTO);
+            }
+        });
+        updatePhotoView();
         return v;
+    }
+
+    private void updatePhotoView() {
+        // TODO: have to implement
     }
 
     @Override
@@ -222,6 +245,9 @@ public class CrimeFragment extends Fragment {
                         cursor.close();
                     }
                 }
+                break;
+            case (REQUEST_PHOTO):
+                updatePhotoView();
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
