@@ -189,8 +189,6 @@ public class CrimeFragment extends Fragment {
         }
 
         mPhotoButton = (ImageButton)v.findViewById(R.id.camera_button);
-        mPhotoView = (ImageView)v.findViewById(R.id.crime_photo);
-
         Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         mPhotoButton.setEnabled(mPhotoFile != null &&
                 captureImage.resolveActivity(packageManager) != null);
@@ -203,7 +201,20 @@ public class CrimeFragment extends Fragment {
                 startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), REQUEST_PHOTO);
             }
         });
+
+        mPhotoView = (ImageView)v.findViewById(R.id.crime_photo);
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mPhotoFile != null && mPhotoFile.exists()) {
+                    PhotoFragment photoDialog = PhotoFragment.newInstance(mPhotoFile.getPath());
+                    photoDialog.show(getFragmentManager(), PhotoFragment.DLG_TAG);
+                }
+            }
+        });
+
         updatePhotoView();
+
         return v;
     }
 

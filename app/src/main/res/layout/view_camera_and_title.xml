@@ -34,7 +34,6 @@
             android:text="@string/crime_title_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView"
             style="?android:attr/listSeparatorTextViewStyle" />
 
         <EditText
