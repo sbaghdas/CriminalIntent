@@ -13,12 +13,14 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -27,10 +29,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
 
+import static android.app.Activity.RESULT_OK;
+
 public class CrimeFragment extends Fragment {
+    private static final String LOG_TAG = CrimeFragment.class.getSimpleName();
+
     private static final String ARG_CRIME_ID = "crime_id";
     public static final int REQUEST_DATE = 0;
     public static final int PICK_REQUEST = 1;
@@ -198,7 +205,7 @@ public class CrimeFragment extends Fragment {
                 Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 Uri uri = Uri.fromFile(mPhotoFile);
                 captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), REQUEST_PHOTO);
+                startActivityForResult(captureImage, REQUEST_PHOTO);
             }
         });
 
@@ -213,7 +220,19 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        updatePhotoView();
+        ViewTreeObserver treeObserver = mPhotoView.getViewTreeObserver();
+        if (treeObserver.isAlive()) {
+            treeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    mPhotoView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    Log.d(LOG_TAG, "Size of the photo view is [" +
+                            mPhotoView.getWidth() + ", " +
+                            mPhotoView.getHeight() + "]");
+                    updatePhotoView();
+                }
+            });
+        }
 
         return v;
     }
@@ -221,7 +240,7 @@ public class CrimeFragment extends Fragment {
     private void updatePhotoView() {
         if (mPhotoFile != null && mPhotoFile.exists()) {
             mPhotoView.setImageBitmap(PictureUtils.getScaledBitmap(
-                    mPhotoFile.getPath(), getActivity()));
+                    mPhotoFile.getPath(), mPhotoView.getWidth(), mPhotoView.getHeight()));
         } else {
             mPhotoView.setImageBitmap(null);
         }

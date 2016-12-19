@@ -16,8 +16,6 @@ public class PhotoFragment extends DialogFragment {
 
     private static final String ARG_FILE_PATH = "file_path";
 
-    private String mFilePath;
-
     public static PhotoFragment newInstance(String filePath) {
         PhotoFragment fragment = new PhotoFragment();
         Bundle args = new Bundle();
@@ -29,18 +27,24 @@ public class PhotoFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.date_dialog_content, null);
-        AlertDialog dlg = new AlertDialog.Builder(getActivity()).
-                setView(view).
-                create();
-
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_photo, null);
         ImageView imageView = (ImageView)view.findViewById(R.id.photo_view);
         if (getArguments() != null) {
             String filePath = getArguments().getString(ARG_FILE_PATH);
-            imageView.setImageBitmap(PictureUtils.getScaledBitmap(mFilePath, getActivity()));
+            imageView.setImageBitmap(PictureUtils.getScaledBitmap(filePath, getActivity()));
         } else {
             imageView.setImageBitmap(null);
         }
+
+        AlertDialog dlg = new AlertDialog.Builder(getActivity()).
+                setTitle("Crime photo").
+                setView(view).
+                setNeutralButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                }).
+                create();
         return dlg;
     }
 }
