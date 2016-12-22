@@ -125,34 +125,13 @@ public class CrimeListFragment extends Fragment {
         mCrimeLab = CrimeLab.getInstance(getActivity());
         mCrimeRecyclerView = (RecyclerView)v.findViewById(R.id.crime_view_recycler);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        if (mCallbacks != null && mCrimeLab.getCrimes().size() > 0) {
-            mCallbacks.onCrimeSelected(mCrimeLab.getCrimes().get(0));
-        }
-
         return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        List<Crime> crimes = mCrimeLab.getCrimes();
-        if (mCrimeAdapter == null) {
-            mCrimeAdapter = new CrimeAdapter(crimes);
-            mCrimeRecyclerView.setAdapter(mCrimeAdapter);
-        }
-        else {
-            mCrimeAdapter.setCrimes(crimes);
-            mCrimeAdapter.notifyDataSetChanged();
-        }
-
-        View emptyListTextView = getView().findViewById(R.id.empty_list_text_view);
-        if (crimes.size() == 0) {
-            emptyListTextView.setVisibility(View.VISIBLE);
-        } else {
-            emptyListTextView.setVisibility(View.GONE);
-        }
-        updateSubtitle();
+        updateUI();
     }
 
     @Override
@@ -210,5 +189,24 @@ public class CrimeListFragment extends Fragment {
         else {
             subtitleMenu.setTitle(R.string.show_subtitle);
         }
+    }
+
+    public void updateUI() {
+        List<Crime> crimes = mCrimeLab.getCrimes();
+        if (mCrimeAdapter == null) {
+            mCrimeAdapter = new CrimeAdapter(crimes);
+            mCrimeRecyclerView.setAdapter(mCrimeAdapter);
+        }
+        else {
+            mCrimeAdapter.setCrimes(crimes);
+        }
+        mCrimeAdapter.notifyDataSetChanged();
+        View emptyListTextView = getView().findViewById(R.id.empty_list_text_view);
+        if (mCrimeLab.getCrimes().size() == 0) {
+            emptyListTextView.setVisibility(View.VISIBLE);
+        } else {
+            emptyListTextView.setVisibility(View.GONE);
+        }
+        updateSubtitle();
     }
 }

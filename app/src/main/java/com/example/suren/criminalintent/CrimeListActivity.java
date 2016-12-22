@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class CrimeListActivity extends SimpleFragmentActivity
-    implements CrimeListFragment.Callbacks {
+    implements CrimeListFragment.Callbacks, CrimeFragment.Callbacks {
 
     @Override
     protected Fragment createFragment() {
@@ -46,5 +46,12 @@ public class CrimeListActivity extends SimpleFragmentActivity
             position++;
         }
         startActivity(CrimePagerActivity.newIntent(this, position));
+    }
+
+    @Override
+    public void onCrimeChanged(Crime crime) {
+        CrimeListFragment listFragment = (CrimeListFragment)getSupportFragmentManager().
+                findFragmentById(R.id.fragment_container);
+        listFragment.updateUI();
     }
 }

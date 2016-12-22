@@ -1,6 +1,7 @@
 package com.example.suren.criminalintent;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -53,6 +54,11 @@ public class CrimeFragment extends Fragment {
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
     private File mPhotoFile;
+    private Callbacks mCallbacks;
+
+    public interface Callbacks {
+        void onCrimeChanged(Crime crime);
+    }
 
     public CrimeFragment() {
     }
@@ -99,6 +105,7 @@ public class CrimeFragment extends Fragment {
            @Override
            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                mCrime.setTitle(charSequence.toString());
+               updateCrime();
            }
 
            @Override
@@ -123,6 +130,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 mCrime.setSolved(isChecked);
+                updateCrime();
             }
         });
 
@@ -246,10 +254,17 @@ public class CrimeFragment extends Fragment {
         }
     }
 
+    private void updateCrime() {
+        CrimeLab.getInstance(getContext()).updateCrime(mCrime);
+        if (mCallbacks != null) {
+            mCallbacks.onCrimeChanged(mCrime);
+        }
+    }
+
     @Override
     public void onPause() {
         super.onPause();
-        CrimeLab.getInstance(getContext()).updateCrime(mCrime);
+        updateCrime();
     }
 
     @Override
@@ -258,6 +273,7 @@ public class CrimeFragment extends Fragment {
             case (REQUEST_DATE):
                 mCrime.setDate((Date)data.getSerializableExtra(DatePickerFragment.RESULT_DATE));
                 updateDate();
+                updateCrime();
                 break;
             case (PICK_REQUEST):
                 if (data != null) {
@@ -285,6 +301,20 @@ public class CrimeFragment extends Fragment {
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof  Callbacks) {
+            mCallbacks = (Callbacks) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
     }
 
     @Override
