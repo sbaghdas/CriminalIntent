@@ -1,11 +1,13 @@
 package com.example.suren.criminalintent;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telecom.Call;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +28,11 @@ public class CrimeListFragment extends Fragment {
     private CrimeAdapter mCrimeAdapter;
     private boolean mSubtitleVisible = false;
     private CrimeLab mCrimeLab;
+    private Callbacks mCallbacks;
+
+    public interface Callbacks {
+        void onCrimeSelected(Crime crime);
+    }
 
     private class CrimeHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
@@ -51,21 +58,10 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            startCrimeDetailsActivity(mCrime);
-        }
-    }
-
-    private void startCrimeDetailsActivity(Crime crime) {
-        int position = 0;
-        List<Crime> crimes = mCrimeLab.getCrimes();
-        Iterator<Crime> iter = crimes.iterator();
-        while (iter.hasNext()) {
-            if (iter.next().getId().equals(crime.getId())) {
-                break;
+            if (mCallbacks != null) {
+                mCallbacks.onCrimeSelected(mCrime);
             }
-            position++;
         }
-        startActivity(CrimePagerActivity.newIntent(getContext(), position));
     }
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
@@ -101,6 +97,18 @@ public class CrimeListFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks)context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -117,6 +125,9 @@ public class CrimeListFragment extends Fragment {
         mCrimeLab = CrimeLab.getInstance(getActivity());
         mCrimeRecyclerView = (RecyclerView)v.findViewById(R.id.crime_view_recycler);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        if (mCallbacks != null && mCrimeLab.getCrimes().size() > 0) {
+            mCallbacks.onCrimeSelected(mCrimeLab.getCrimes().get(0));
+        }
 
         return v;
     }
@@ -154,9 +165,11 @@ public class CrimeListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case (R.id.menu_item_new_crime):
-                Crime crime = new Crime();
-                mCrimeLab.addCrime(crime);
-                startCrimeDetailsActivity(crime);
+                if (mCallbacks != null) {
+                    Crime crime = new Crime();
+                    mCrimeLab.addCrime(crime);
+                    mCallbacks.onCrimeSelected(crime);
+                }
                 return true;
             case (R.id.menu_item_show_subtitle):
                 mSubtitleVisible = !mSubtitleVisible;
